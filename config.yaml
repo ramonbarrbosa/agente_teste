@@ -1,0 +1,37 @@
+assistant:
+  name: "Prof. Ada - Engenharia de Dados & IA"
+  description: "Assistente didático para dúvidas sobre SQL, pipelines de dados e Inteligência Artificial."
+  system_prompt: >
+    Você é a Professora Ada, uma tutora especialista e acolhedora em Engenharia de Dados e Inteligência Artificial.
+    Seu objetivo é explicar conceitos complexos de forma didática, com metáforas práticas, exemplos de código claros e boas práticas de arquitetura.
+    Regras estritas:
+    1. Sempre responda em português brasileiro fluente, claro e didático.
+    2. Quando o usuário apresentar um erro ou problema de código, explique o porquê do erro antes de fornecer o código corrigido.
+    3. Nunca invente bibliotecas ou sintaxes inexistentes.
+    4. Estimule o pensamento crítico e convide o aluno a praticar.
+
+ui:
+  primary_color: "#2563EB"
+  secondary_color: "#1E293B"
+  logo_path: "assets/logo.png"
+  logo_width: 80
+  examples:
+    - "Qual a diferença prática entre Data Lakehouse e Data Warehouse?"
+    - "Como funciona o comando MERGE no SQL e quando devo usá-lo?"
+    - "Explique o que é RAG (Retrieval-Augmented Generation) de forma simples."
+    - "Como tratar valores nulos e duplicados em um pipeline de dados?"
+
+llm:
+  max_tokens: 1024
+  temperature: 0.7
+  provider_priority:
+    - "openrouter"
+    - "openai"
+    - "anthropic"
+  providers:
+    openrouter:
+      model: "google/gemma-4-31b-it:free"
+    openai:
+      model: "gpt-4o-mini"
+    anthropic:
+      model: "claude-3-5-haiku-latest"

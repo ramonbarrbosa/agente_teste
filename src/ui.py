@@ -2,7 +2,6 @@
 
 import base64
 import os
-from typing import List, Tuple
 
 import gradio as gr
 
@@ -123,31 +122,28 @@ def build_app(config: AppConfig, router: LLMRouter) -> gr.Blocks:
                 label="💡 Perguntas frequentes (clique para preencher)",
             )
 
-        def user_submit(user_msg: str, chat_history: List[Tuple[str, str]]):
+        def user_submit(user_msg: str, chat_history: list[dict]):
             if not user_msg or not user_msg.strip():
                 return "", chat_history
-            updated_history = chat_history + [(user_msg, "")]
-            return "", updated_history
+            history = list(chat_history) if chat_history else []
+            history.append({"role": "user", "content": user_msg.strip()})
+            return "", history
 
-        def bot_respond(chat_history: List[Tuple[str, str]]):
+        def bot_respond(chat_history: list[dict]):
             if not chat_history:
                 return chat_history
 
-            user_msg = chat_history[-1][0]
-
-            # Monta histórico de mensagens no formato role/content
-            llm_messages = []
-            for past_user, past_bot in chat_history[:-1]:
-                if past_user:
-                    llm_messages.append({"role": "user", "content": past_user})
-                if past_bot:
-                    llm_messages.append({"role": "assistant", "content": past_bot})
-
-            llm_messages.append({"role": "user", "content": user_msg})
+            # Envia o histórico completo de mensagens no formato role/content
+            llm_messages = [
+                {"role": m.get("role", "user"), "content": m.get("content", "")}
+                for m in chat_history
+                if m.get("content")
+            ]
 
             bot_reply = router.generate_response(llm_messages)
-            chat_history[-1] = (user_msg, bot_reply)
-            return chat_history
+            history = list(chat_history)
+            history.append({"role": "assistant", "content": bot_reply})
+            return history
 
         # Encadeamento de eventos: limpa input -> adiciona ao chat -> gera resposta
         msg_input.submit(

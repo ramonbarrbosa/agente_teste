@@ -2,7 +2,6 @@
 
 import base64
 import os
-
 import gradio as gr
 
 from src.config import AppConfig
